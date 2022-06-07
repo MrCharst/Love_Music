@@ -1,64 +1,44 @@
 package com.example.loveMusic.ui.nav_left
 
-import android.content.Context
-import android.net.ConnectivityManager
+import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.loveMusic.R
 import com.example.loveMusic.databinding.ActivityFeedbackBinding
 import com.example.loveMusic.ui.main.MainActivity
-import java.util.*
-import javax.mail.*
-import javax.mail.internet.InternetAddress
-import javax.mail.internet.MimeMessage
 
 class FeedbackActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityFeedbackBinding
 
+    @SuppressLint("QueryPermissionsNeeded")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(MainActivity.currentThemeNav[MainActivity.themeIndex])
         binding = ActivityFeedbackBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar?.title = "Feedback"
+        supportActionBar?.title = getString(R.string.phanhoi)
         binding.sendFA.setOnClickListener {
-            val feedbackMsg =
-                binding.feedbackMsgFA.text.toString() + "\n" + binding.emailFA.text.toString()
-            val subject = binding.topicFA.text.toString()
-//            val userName = USER_NAME
-//            val pass = PASSWORD
-            val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            if (feedbackMsg.isNotEmpty() && subject.isNotEmpty() && (cm.activeNetworkInfo?.isConnectedOrConnecting == true)) {
-//                Thread {
-//                    try {
-//                        val properties = Properties()
-//                        properties["mail.smtp.auth"] = "true"
-//                        properties["mail.smtp.starttls.enable"] = "true"
-//                        properties["mail.smtp.host"] = "smtp.gmail.com"
-//                        properties["mail.smtp.port"] = "587"
-//                        val session = Session.getInstance(properties, object : Authenticator() {
-//                            override fun getPasswordAuthentication(): PasswordAuthentication {
-//                                return PasswordAuthentication(userName, pass)
-//                            }
-//                        })
-//                        val mail = MimeMessage(session)
-//                        mail.subject = subject
-//                        mail.setText(feedbackMsg)
-//                        mail.setFrom(InternetAddress(userName))
-//                        mail.setRecipients(
-//                            Message.RecipientType.TO,
-//                            InternetAddress.parse(userName)
-//                        )
-//                        Transport.send(mail)
-//                    } catch (e: Exception) {
-//                       Log.d("Exceptionhihi","exeption $e")
-//                    }
-//                }.start()
-                Toast.makeText(this, "Thanks For Feedback!!", Toast.LENGTH_SHORT).show()
-                finish()
-            } else Toast.makeText(this, "Went Something Wrong!!", Toast.LENGTH_SHORT).show()
+            val feedbackMsg = binding.feedbackMsgFA.text.toString().trim()
+            val subject = binding.topicFA.text.toString().trim()
+            if (feedbackMsg.length >= 20 && subject.length >= 3) {
+                val intent = Intent(Intent.ACTION_SENDTO)
+                intent.data = Uri.parse("mailto:")
+                intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("maiquyenlinh15320@gmail.com"))
+                intent.putExtra(Intent.EXTRA_SUBJECT, subject)
+                intent.putExtra(Intent.EXTRA_TEXT, feedbackMsg)
+                try {
+                    startActivity(Intent.createChooser(intent, getString(R.string.gmail)))
+                } catch (ex: ActivityNotFoundException) {
+                    Toast.makeText(this, R.string.cocaigisai, Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, R.string.chitiethown, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

@@ -157,7 +157,6 @@ class MusicService: Service(), AudioManager.OnAudioFocusChangeListener {
 //            showNotification(R.drawable.pause_icon)
 //        }
     }
-
     //for making persistent
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return START_STICKY

@@ -3,6 +3,7 @@ package com.example.loveMusic.ui.main
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.loveMusic.R
 import com.example.loveMusic.adapter.MusicAdapter
+import com.example.loveMusic.adapter.PlayListDetaiAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.GsonBuilder
 import com.example.loveMusic.databinding.ActivityPlaylistDetailsBinding
@@ -19,18 +21,18 @@ import com.example.loveMusic.model.setDialogBtnBackground
 class PlaylistDetails : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlaylistDetailsBinding
-    private lateinit var adapter: MusicAdapter
+    private lateinit var adapter: PlayListDetaiAdapter
 
     companion object{
         var currentPlaylistPos: Int = -1
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(MainActivity.currentTheme[MainActivity.themeIndex])
         binding = ActivityPlaylistDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         currentPlaylistPos = intent.extras?.get("index") as Int
+        Log.d("indexhihi",currentPlaylistPos.toString())
         try{
             PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist =
             checkPlaylist(playlist = PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist)
@@ -39,7 +41,7 @@ class PlaylistDetails : AppCompatActivity() {
         binding.playlistDetailsRV.setItemViewCacheSize(10)
         binding.playlistDetailsRV.setHasFixedSize(true)
         binding.playlistDetailsRV.layoutManager = LinearLayoutManager(this)
-        adapter = MusicAdapter(this, PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist, playlistDetails = true)
+        adapter = PlayListDetaiAdapter(this, PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist, playlistDetails = true)
         binding.playlistDetailsRV.adapter = adapter
         binding.backBtnPD.setOnClickListener { finish() }
         binding.shuffleBtnPD.setOnClickListener {
@@ -53,14 +55,14 @@ class PlaylistDetails : AppCompatActivity() {
         }
         binding.removeAllPD.setOnClickListener {
             val builder = MaterialAlertDialogBuilder(this)
-            builder.setTitle("Remove")
-                .setMessage("Do you want to remove all songs from playlist?")
-                .setPositiveButton("Yes"){ dialog, _ ->
+            builder.setTitle(R.string.Xoa)
+                .setMessage(getString(R.string.bancomuonxoatatcabaihatkhong))
+                .setPositiveButton(R.string.dongy){ dialog, _ ->
                     PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist.clear()
                     adapter.refreshPlaylist()
                     dialog.dismiss()
                 }
-                .setNegativeButton("No"){dialog, _ ->
+                .setNegativeButton(R.string.khong){dialog, _ ->
                     dialog.dismiss()
                 }
             val customDialog = builder.create()
@@ -74,8 +76,8 @@ class PlaylistDetails : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         binding.playlistNamePD.text = PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].name
-        binding.moreInfoPD.text = "Total ${adapter.itemCount} Songs.\n\n" +
-                "Created On:\n${PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].createdOn}\n\n" +
+        binding.moreInfoPD.text = "${getString(R.string.tong)} ${adapter.itemCount} ${getString(R.string.baihat)}\n\n" +
+                "${getString(R.string.dctaora)}\n${PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].createdOn}\n\n" +
                 "  -- ${PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].createdBy}"
         if(adapter.itemCount > 0)
         {

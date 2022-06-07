@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         //checking for dark theme
         if(themeIndex == 4 &&  resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_NO)
-            Toast.makeText(this, "Black Theme Works Best in Dark Mode!!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.chudeden), Toast.LENGTH_LONG).show()
 
         if(requestRuntimePermission()){
             initializeLayout()
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.shuffleBtn.setOnClickListener {
-            Toast.makeText(this, "Chế độ phát ngẫu nhiên", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.chedophatnn), Toast.LENGTH_SHORT).show()
             val intent = Intent(this@MainActivity, PlayerActivity::class.java)
             intent.putExtra("index", 0)
             intent.putExtra("class", "MainActivity")
@@ -127,12 +127,12 @@ class MainActivity : AppCompatActivity() {
                 R.id.navAbout -> startActivity(Intent(this@MainActivity, AboutActivity::class.java))
                 R.id.navExit -> {
                     val builder = MaterialAlertDialogBuilder(this)
-                    builder.setTitle("Exit")
-                        .setMessage("Do you want to close app?")
-                        .setPositiveButton("Yes"){ _, _ ->
+                    builder.setTitle(getString(R.string.thoat))
+                        .setMessage(getString(R.string.bancomuonthoaungdungko))
+                        .setPositiveButton(R.string.dongy){ _, _ ->
                             exitApplication()
                         }
-                        .setNegativeButton("No"){dialog, _ ->
+                        .setNegativeButton(R.string.khong){dialog, _ ->
                             dialog.dismiss()
                         }
                     val customDialog = builder.create()
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode == 13){
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(this, "Permission Granted",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.dadcchophep),Toast.LENGTH_SHORT).show()
                 initializeLayout()
             }
             else
@@ -185,7 +185,7 @@ class MainActivity : AppCompatActivity() {
         binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
         musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
         binding.musicRV.adapter = musicAdapter
-        binding.totalSongs.text  = "Total Songs : "+musicAdapter.itemCount
+        binding.totalSongs.text  = getString(R.string.tongbaihat)+musicAdapter.itemCount
 
         //for refreshing layout on swipe from top
         binding.refreshLayout.setOnRefreshListener {

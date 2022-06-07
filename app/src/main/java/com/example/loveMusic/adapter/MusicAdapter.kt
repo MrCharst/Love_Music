@@ -67,20 +67,20 @@ class MusicAdapter(
                     .create()
                 dialog.show()
                 dialog.window?.setBackgroundDrawable(ColorDrawable(0x99000000.toInt()))
-
                 bindingMF.AddToPNBtn.setOnClickListener {
                     try {
-                        if (PlayNext.playNextList.isEmpty()) {
+                        if(PlayNext.playNextList.isEmpty()){
                             PlayNext.playNextList.add(PlayerActivity.musicListPA[PlayerActivity.songPosition])
                             PlayerActivity.songPosition = 0
-                            Toast.makeText(context, "Đã thêm vào danh sách phát tiếp theo", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.dathembaihatvaodanhsachphat), Toast.LENGTH_SHORT).show()
                         }
-                        Toast.makeText(context, "Đã thêm vào danh sách phát tiếp theo", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.dathembaihatvaodanhsachphat), Toast.LENGTH_SHORT).show()
                         PlayNext.playNextList.add(musicList[position])
                         PlayerActivity.musicListPA = ArrayList()
                         PlayerActivity.musicListPA.addAll(PlayNext.playNextList)
+
                     } catch (e: Exception) {
-                        Snackbar.make(context, holder.root, "Play A Song First!!", 3000).show()
+                        Snackbar.make(context, holder.root, context.getString(R.string.phatbaihatdautien), 3000).show()
                     }
                     dialog.dismiss()
                 }
@@ -95,18 +95,18 @@ class MusicAdapter(
                     val dDialog = MaterialAlertDialogBuilder(context)
 //                        .setBackground(ColorDrawable(0x99000000.toInt()))
                         .setView(detailsDialog)
-                        .setPositiveButton("OK") { self, _ -> self.dismiss() }
+                        .setPositiveButton(R.string.ok) { self, _ -> self.dismiss() }
                         .setCancelable(false)
                         .create()
                     dDialog.show()
                     dDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
                     setDialogBtnBackground(context, dDialog)
                     dDialog.window?.setBackgroundDrawable(ColorDrawable(0x99000000.toInt()))
-                    val str = SpannableStringBuilder().bold { append("DETAILS\n\nName: ") }
+                    val str = SpannableStringBuilder().bold { append("${context.getString(R.string.DETAILS)}\n\n${context.getString(R.string.Name)} ") }
                         .append(musicList[position].title)
-                        .bold { append("\n\nDuration: ") }
+                        .bold { append("\n\n${context.getString(R.string.Duration)} ") }
                         .append(DateUtils.formatElapsedTime(musicList[position].duration / 1000))
-                        .bold { append("\n\nLocation: ") }.append(musicList[position].path)
+                        .bold { append("\n\n${context.getString(R.string.Location )} ") }.append(musicList[position].path)
                     binder.detailsTV.text = str
                 }
 

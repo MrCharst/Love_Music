@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.loveMusic.BuildConfig
+import com.example.loveMusic.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.example.loveMusic.databinding.ActivitySettingsBinding
 import com.example.loveMusic.model.exitApplication
@@ -19,7 +20,7 @@ class SettingsActivity : AppCompatActivity() {
         setTheme(MainActivity.currentThemeNav[MainActivity.themeIndex])
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar?.title = "Settings"
+        supportActionBar?.title = getString(R.string.caidat)
         when(MainActivity.themeIndex){
             0 -> binding.coolPinkTheme.setBackgroundColor(Color.YELLOW)
             1 -> binding.coolBlueTheme.setBackgroundColor(Color.YELLOW)
@@ -34,11 +35,12 @@ class SettingsActivity : AppCompatActivity() {
         binding.coolBlackTheme.setOnClickListener { saveTheme(4) }
         binding.versionName.text = setVersionDetails()
         binding.sortBtn.setOnClickListener {
-            val menuList = arrayOf("Recently Added", "Song Title", "File Size")
+            val menuList = arrayOf(getString(R.string.dathemganday), getString(R.string.tenbaihat), getString(
+                            R.string.kichthuocfile))
             var currentSort = MainActivity.sortOrder
             val builder = MaterialAlertDialogBuilder(this)
-            builder.setTitle("Sorting")
-                .setPositiveButton("OK"){ _, _ ->
+            builder.setTitle(getString(R.string.sapxep))
+                .setPositiveButton(R.string.ok){ _, _ ->
                     val editor = getSharedPreferences("SORTING", MODE_PRIVATE).edit()
                     editor.putInt("sortOrder", currentSort)
                     editor.apply()
@@ -59,12 +61,12 @@ class SettingsActivity : AppCompatActivity() {
             editor.putInt("themeIndex", index)
             editor.apply()
             val builder = MaterialAlertDialogBuilder(this)
-            builder.setTitle("Apply Theme")
-                .setMessage("Do you want to apply theme?")
-                .setPositiveButton("Yes"){ _, _ ->
+            builder.setTitle(getString(R.string.apdungchude))
+                .setMessage(getString(R.string.bancomuonapdunchude))
+                .setPositiveButton(R.string.dongy){ _, _ ->
                     exitApplication()
                 }
-                .setNegativeButton("No"){dialog, _ ->
+                .setNegativeButton(R.string.khong){dialog, _ ->
                     dialog.dismiss()
                 }
             val customDialog = builder.create()
@@ -74,6 +76,6 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
     private fun setVersionDetails():String{
-        return "Version Name: ${BuildConfig.VERSION_NAME}"
+        return "${getString(R.string.tenphienban)} ${BuildConfig.VERSION_NAME}"
     }
 }

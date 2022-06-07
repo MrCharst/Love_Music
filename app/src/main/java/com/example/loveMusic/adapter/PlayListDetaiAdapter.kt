@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.text.SpannableStringBuilder
 import android.text.format.DateUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -20,36 +19,42 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.loveMusic.R
 import com.example.loveMusic.databinding.DetailsViewBinding
-import com.example.loveMusic.databinding.FavouriteViewBinding
+import com.example.loveMusic.databinding.ItemMusicBinding
 import com.example.loveMusic.databinding.MoreFeaturesBinding
 import com.example.loveMusic.model.Music
+import com.example.loveMusic.model.formatDuration
 import com.example.loveMusic.model.setDialogBtnBackground
-import com.example.loveMusic.ui.main.PlayNext
+import com.example.loveMusic.ui.main.MainActivity
 import com.example.loveMusic.ui.main.PlayerActivity
 import com.example.loveMusic.ui.main.PlaylistActivity
 import com.example.loveMusic.ui.main.PlaylistDetails
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
-class FavouriteAdapter(
+class PlayListDetaiAdapter(
     private val context: Context,
     private var musicList: ArrayList<Music>,
-    val playNext: Boolean = false
-) : RecyclerView.Adapter<FavouriteAdapter.MyHolder>() {
+    private val playlistDetails: Boolean = false,
+    private val selectionActivity: Boolean = false
+) : RecyclerView.Adapter<PlayListDetaiAdapter.MyHolder>() {
 
-    class MyHolder(binding: FavouriteViewBinding) : RecyclerView.ViewHolder(binding.root) {
-        val image = binding.songImgFV
-        val name = binding.songNameFV
+    class MyHolder(binding: ItemMusicBinding) : RecyclerView.ViewHolder(binding.root) {
+        val title = binding.songNameMV
+        val album = binding.songAlbumMV
+        val image = binding.imageMV
+        val duration = binding.songDuration
         val root = binding.root
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
-        return MyHolder(FavouriteViewBinding.inflate(LayoutInflater.from(context), parent, false))
+        return MyHolder(ItemMusicBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
-        holder.name.text = musicList[position].title
+        holder.title.text = musicList[position].title
+        holder.album.text = musicList[position].album
+        holder.duration.text = formatDuration(musicList[position].duration)
         Glide.with(context)
             .load(musicList[position].artUri)
             .apply(
@@ -57,14 +62,8 @@ class FavouriteAdapter(
             )
             .into(holder.image)
 
-        //when play next music is clicked
-        if (playNext) {
-            holder.root.setOnClickListener {
-                val intent = Intent(context, PlayerActivity::class.java)
-                intent.putExtra("index", position)
-                intent.putExtra("class", "PlayNext")
-                ContextCompat.startActivity(context, intent, null)
-            }
+        //for play next feature
+        if (!selectionActivity)
             holder.root.setOnLongClickListener {
                 val customDialog =
                     LayoutInflater.from(context).inflate(R.layout.more_features, holder.root, false)
@@ -75,17 +74,8 @@ class FavouriteAdapter(
                 dialog.window?.setBackgroundDrawable(ColorDrawable(0x99000000.toInt()))
                 bindingMF.AddToPNBtn.text = context.getString(R.string.Xoa)
                 bindingMF.AddToPNBtn.setOnClickListener {
-                    if(position == PlayerActivity.songPosition)
-                        Snackbar.make((context as Activity).findViewById(R.id.linearLayoutPN),
-                            context.getString(R.string.khongthexoabaihatdangphat), Snackbar.LENGTH_SHORT).show()
-                    else{
-                        Log.d("position","hihi $position")
-                        Toast.makeText(context, context.getString(R.string.daxoabaihatkhoidanhsachtiep), Toast.LENGTH_SHORT).show()
-                        if(PlayerActivity.songPosition < position && PlayerActivity.songPosition != 0) --PlayerActivity.songPosition
-                        PlayNext.playNextList.removeAt(position)
-                        PlayerActivity.musicListPA.removeAt(position)
-                        notifyItemRemoved(position)
-                    }
+                    PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.removeAt(position)
+                    refreshPlaylist()
                     dialog.dismiss()
                 }
 
@@ -113,32 +103,47 @@ class FavouriteAdapter(
                         .bold { append("\n\n${context.getString(R.string.Location )} ") }.append(musicList[position].path)
                     binder.detailsTV.text = str
                 }
+
                 return@setOnLongClickListener true
             }
-        } else {
-            holder.root.setOnClickListener {
-                val intent = Intent(context, PlayerActivity::class.java)
-                intent.putExtra("index", position)
-                intent.putExtra("class", "FavouriteAdapter")
-                ContextCompat.startActivity(context, intent, null)
+        when {
+            playlistDetails -> {
+                holder.root.setOnClickListener {
+                    sendIntent(ref = "PlaylistDetailsAdapter", pos = position)
+                }
             }
+            else -> {
+                holder.root.setOnClickListener {
+                    when {
+                        MainActivity.search -> sendIntent(
+                            ref = "MusicAdapterSearch",
+                            pos = position
+                        )
+                        musicList[position].id == PlayerActivity.nowPlayingId ->
+                            sendIntent(ref = "NowPlaying", pos = PlayerActivity.songPosition)
+                        else -> sendIntent(ref = "MusicAdapter", pos = position)
+                    }
+                }
+            }
+
         }
+    }
+
+    private fun sendIntent(ref: String, pos: Int) {
+        val intent = Intent(context, PlayerActivity::class.java)
+        intent.putExtra("index", pos)
+        intent.putExtra("class", ref)
+        ContextCompat.startActivity(context, intent, null)
     }
 
     override fun getItemCount(): Int {
         return musicList.size
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateFavourites(newList: ArrayList<Music>) {
-        musicList = ArrayList()
-        musicList.addAll(newList)
-        notifyDataSetChanged()
-    }
+
     fun refreshPlaylist() {
         musicList = ArrayList()
         musicList = PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist
         notifyDataSetChanged()
     }
-
 }
