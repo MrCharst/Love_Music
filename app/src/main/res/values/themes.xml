@@ -15,7 +15,7 @@
 
     <style name="coolPink" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="themeColor">@color/cool_pink</item>
-        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimary">@color/cool_pink</item>
         <item name="colorPrimaryVariant">@color/black</item>
         <item name="colorOnPrimary">@color/black</item>
         <item name="colorSecondary">@color/teal_200</item>

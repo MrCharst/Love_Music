@@ -15,6 +15,7 @@
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/drawable/feedback_icon.xml" value="0.151" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/drawable/ic_skip_next.xml" value="0.151" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/drawable/ic_skip_previous.xml" value="0.151" />
+        <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/drawable/music_icon.xml" value="0.165" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/drawable/pause_icon.xml" value="0.151" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/drawable/play_icon.xml" value="0.151" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/drawable/play_next_icon.xml" value="0.151" />
@@ -42,10 +43,13 @@
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/layout/audio_booster.xml" value="0.23148148148148148" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/layout/bottom_sheet_dialog.xml" value="0.25" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/layout/details_view.xml" value="0.25416666666666665" />
+        <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/layout/favourite_view.xml" value="0.25416666666666665" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/layout/fragment_now_playing.xml" value="0.25416666666666665" />
+        <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/layout/item_music.xml" value="0.19583333333333333" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/layout/more_features.xml" value="0.25416666666666665" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/layout/music_view.xml" value="0.25416666666666665" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/layout/nav_header.xml" value="0.23703703703703705" />
+        <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/layout/playlist_view.xml" value="0.23489583333333333" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/menu/nav_menu.xml" value="0.23703703703703705" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/menu/search_view_menu.xml" value="0.23703703703703705" />
         <entry key="..\:/Do An Tot Nghiep/LoveMusic/app/src/main/res/mipmap-anydpi-v26/love_music_icon.xml" value="0.151" />

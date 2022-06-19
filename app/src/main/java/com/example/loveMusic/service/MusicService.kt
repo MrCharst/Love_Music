@@ -12,6 +12,7 @@ import android.os.*
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.core.app.NotificationCompat
 import com.example.loveMusic.*
 import com.example.loveMusic.model.formatDuration
 import com.example.loveMusic.model.getImgArt
@@ -68,7 +69,7 @@ class MusicService: Service(), AudioManager.OnAudioFocusChangeListener {
             BitmapFactory.decodeResource(resources, R.drawable.love_music_icon_slash_screen)
         }
 
-        val notification = androidx.core.app.NotificationCompat.Builder(baseContext,
+        val notification = NotificationCompat.Builder(baseContext,
             ApplicationClass.CHANNEL_ID
         )
             .setContentIntent(contentIntent)

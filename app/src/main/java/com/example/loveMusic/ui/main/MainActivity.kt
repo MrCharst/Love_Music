@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -32,7 +33,10 @@ import com.example.loveMusic.model.setDialogBtnBackground
 import com.example.loveMusic.ui.nav_left.AboutActivity
 import com.example.loveMusic.ui.nav_left.FeedbackActivity
 import com.example.loveMusic.ui.nav_left.SettingsActivity
+import wseemann.media.FFmpegMediaMetadataRetriever
+import java.io.DataOutputStream
 import java.io.File
+import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -159,7 +163,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode == 13){
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(this, getString(R.string.dadcchophep),Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.dadcchophep),Toast.LENGTH_LONG).show()
                 initializeLayout()
             }
             else
@@ -191,7 +195,7 @@ class MainActivity : AppCompatActivity() {
         binding.refreshLayout.setOnRefreshListener {
             MusicListMA = getAllAudio()
             musicAdapter.updateMusicList(MusicListMA)
-
+            binding.totalSongs.text = getString(R.string.tongbaihat) + MusicListMA.size.toString()
             binding.refreshLayout.isRefreshing = false
         }
     }
@@ -214,11 +218,14 @@ class MainActivity : AppCompatActivity() {
                     val artistC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST))?:"Unknown"
                     val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
                     val durationC = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))
-                    val albumIdC = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)).toString()
-                    val uri = Uri.parse("content://media/external/audio/albumart")
-                    val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
+                    val albumIdC = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID))?:"Unknown"
+//                    val uri = Uri.parse("content://media/external/audio/albumart")
+//                    val artUriC = Uri.withAppendedPath(uri, albumIdC.toString()).toString()
+//                    Log.d("artUriC", artUriC)
+//                    Log.d("artUriCalbumIdC", albumIdC.toString())
                     val music = Music(id = idC, title = titleC, album = albumC, artist = artistC, path = pathC, duration = durationC,
-                    artUri = artUriC)
+                    artUri = cacheThumbnailPath(pathC))
+                    Log.d("artUriCduoi", music.artUri.toString())
                     val file = File(music.path)
                     if(file.exists())
                         tempList.add(music)
@@ -226,6 +233,29 @@ class MainActivity : AppCompatActivity() {
                 cursor.close()
         }
         return tempList
+    }
+
+    private fun cacheThumbnailPath(pathAudio: String): String {
+        try {
+            val thumbnailData = FFmpegMediaMetadataRetriever().apply {
+                setDataSource(pathAudio)
+            }.embeddedPicture
+
+            val file = File(cacheDir, pathAudio.hashCode().toString())
+            file.createNewFile()
+            val fileOutputStream = FileOutputStream(file)
+            val dataOutputStream = DataOutputStream(fileOutputStream)
+            dataOutputStream.write(thumbnailData)
+            dataOutputStream.flush()
+            fileOutputStream.close()
+            dataOutputStream.close()
+
+            return file.path
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return ""
     }
 
     override fun onDestroy() {

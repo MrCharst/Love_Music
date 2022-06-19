@@ -2,10 +2,12 @@ package com.example.loveMusic.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.text.SpannableStringBuilder
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -26,6 +28,7 @@ import com.example.loveMusic.model.setDialogBtnBackground
 import com.example.loveMusic.ui.main.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import java.io.File
 
 class MusicAdapter(
     private val context: Context,
